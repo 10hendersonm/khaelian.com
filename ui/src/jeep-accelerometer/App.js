@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/styles'
+import JeepProfile from './JeepProfile'
 
 const inches = 1
 const useStyles = makeStyles(theme => ({
@@ -15,11 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
   sideView: {
     margin: 20,
-    backgroundColor: 'black',
-    display: 'block',
-    height: 72.5 * inches,
-    width: 164.3 * inches,
-    transform: props => `rotate(${props.gamma - 90}deg)`,
+    transform: props => `rotate(${props.climbAngle}deg)`,
   },
 }))
 
@@ -34,22 +31,24 @@ const App = () => {
   const [currentOrientation, setCurrentOrientation] = useState(
     defaultOrientation
   )
-  const classes = useStyles(currentOrientation)
 
   const resetBaseOrientation = () => {
     setBaseOrientation(currentOrientation)
   }
 
   const handleDeviceMotion = e => {
-    console.log(e)
-    const { alpha, beta, gamma } = e
-    const orientation = {
-      alpha,
-      beta,
-      gamma,
+    var orientation = {
       set: true,
     }
-    setCurrentOrientation(orientation)
+    const readProps = ['alpha', 'beta', 'gamma']
+    var changed = false
+    readProps.forEach(readProp => {
+      orientation[readProp] = Math.floor(e[readProp])
+      if (orientation[readProp] !== currentOrientation[readProp]) changed = true
+    })
+    if (changed) {
+      setCurrentOrientation(orientation)
+    }
     if (baseOrientation === null) setBaseOrientation(orientation)
   }
   useEffect(() => {
@@ -59,11 +58,19 @@ const App = () => {
       window.removeEventListener('deviceorientation', handleDeviceMotion, true)
     }
   }, [])
+
+  const climbAngle = 90 - currentOrientation.gamma
+
+  const classes = useStyles({
+    climbAngle,
+    ...currentOrientation,
+  })
+
   return (
     <div>
       {JSON.stringify(currentOrientation)}
       <div className={classes.rearView} />
-      <div className={classes.sideView} />
+      <JeepProfile classes={{ root: classes.sideView }} />
       <Button onClick={resetBaseOrientation}>Reset Orientation</Button>
     </div>
   )
