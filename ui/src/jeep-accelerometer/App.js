@@ -5,6 +5,9 @@ import { makeStyles } from '@material-ui/styles'
 import JeepProfile from './JeepProfile'
 import useWakelock from './hooks/useWakelock'
 import { Typography } from '@material-ui/core'
+import NoSleep from 'nosleep.js'
+
+const noSleep = new NoSleep()
 
 const inches = 1
 const useStyles = makeStyles(theme => ({
@@ -23,6 +26,7 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     left: '50%',
     transform: 'translateX(-50%)',
+    margin: 20,
   },
   rearView: {
     margin: 60,
@@ -41,7 +45,18 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const App = () => {
-  useWakelock()
+  const [wakeLock, setWakeLock] = useState(false)
+
+  const handleEnableWakeLock = e => {
+    if (wakeLock) {
+      noSleep.disable()
+      setWakeLock(false)
+    } else {
+      noSleep.enable()
+      setWakeLock(true)
+    }
+  }
+
   const [currentOrientation, setCurrentOrientation] = useState({
     alpha: 0,
     beta: 0,
@@ -49,7 +64,6 @@ const App = () => {
   })
 
   const handleDeviceMotion = e => {
-    console.log(window.orientation)
     var orientation = {}
     const readProps = ['alpha', 'beta', 'gamma']
     var changed = false
@@ -94,6 +108,15 @@ const App = () => {
 
   return (
     <div className={classes.root}>
+      <div className={classes.infoContainer}>
+        <Button
+          onClick={handleEnableWakeLock}
+          variant="contained"
+          color={wakeLock ? null : 'primary'}
+        >
+          {wakeLock ? 'Disable Wake Lock' : 'Enable Wake Lock'}
+        </Button>
+      </div>
       {window.orientation === 0 ? (
         <Typography variant="h4">Fuck off, Ted</Typography>
       ) : (
