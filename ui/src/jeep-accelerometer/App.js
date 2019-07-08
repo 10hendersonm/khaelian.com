@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     height: 72.5 * inches,
     width: 73.7 * inches,
-    transform: props => `rotate(${props.alpha}deg)`,
+    transform: props => `rotate(${props.beta}deg)`,
   },
   sideView: {
     margin: 20,
