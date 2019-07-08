@@ -49,7 +49,7 @@ const App = () => {
 
   // const isClimb = currentOrientation.alpha < 0 && currentOrientation.beta < 0
   var gamma = currentOrientation.gamma
-  if (gamma < 0) gamma += 90
+  if (gamma < 0) gamma += 180
   var climbAngle = 90 - gamma
 
   const classes = useStyles({
