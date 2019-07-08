@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/styles'
 import JeepProfile from './JeepProfile'
+import useWakelock from './hooks/useWakelock'
 
 const inches = 1
 const useStyles = makeStyles(theme => ({
@@ -37,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const App = () => {
+  useWakelock()
   const [currentOrientation, setCurrentOrientation] = useState({
     alpha: 0,
     beta: 0,
@@ -69,6 +71,10 @@ const App = () => {
 
   var camberAngle = -currentOrientation.beta
 
+  if (window.orientation > 0) {
+    climbAngle = climbAngle * -1
+    camberAngle = camberAngle * -1
+  }
   const classes = useStyles({
     climbAngle,
     camberAngle,
