@@ -102,6 +102,7 @@ const App = () => {
   })
 
   const handleDeviceMotion = e => {
+    console.log(e)
     var orientation = {}
     const readProps = ['alpha', 'beta', 'gamma']
     var changed = false
@@ -114,9 +115,10 @@ const App = () => {
     }
   }
   useEffect(() => {
-    window.addEventListener('deviceorientation', handleDeviceMotion, true)
+    const event = 'deviceorientationabsolute'
+    window.addEventListener(event, handleDeviceMotion, true)
     return () => {
-      window.removeEventListener('deviceorientation', handleDeviceMotion, true)
+      window.removeEventListener(event, handleDeviceMotion, true)
     }
   }, [])
 
