@@ -6,13 +6,29 @@ import JeepProfile from './JeepProfile'
 
 const inches = 1
 const useStyles = makeStyles(theme => ({
+  root: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  infoContainer: {
+    position: 'absolute',
+    top: 0,
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
   rearView: {
     margin: 20,
     backgroundColor: 'black',
     display: 'block',
     height: 72.5 * inches,
     width: 73.7 * inches,
-    transform: props => `rotate(${props.beta}deg)`,
+    transform: props => `rotate(${props.camberAngle}deg)`,
   },
   sideView: {
     margin: 20,
@@ -52,17 +68,23 @@ const App = () => {
   if (gamma < 0) gamma += 180
   var climbAngle = 90 - gamma
 
+  var camberAngle = -currentOrientation.alpha
+
   const classes = useStyles({
     climbAngle,
+    camberAngle,
     ...currentOrientation,
   })
 
   return (
-    <div>
-      {JSON.stringify(currentOrientation)}
+    <div className={classes.root}>
+      <div className={classes.infoContainer}>
+        {JSON.stringify(currentOrientation)}
+        {climbAngle}
+        {camberAngle}
+      </div>
       <div className={classes.rearView} />
       <JeepProfile classes={{ root: classes.sideView }} />
-      {climbAngle}
       {/* <Button onClick={resetBaseOrientation}>Reset Orientation</Button> */}
     </div>
   )
