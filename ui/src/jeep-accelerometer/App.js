@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
   sideView: {
     margin: 20,
-    transform: props => `rotate(${props.climbAngle}deg)`,
+    transform: props => `rotate(${props.descentAngle}deg)`,
   },
 }))
 
@@ -67,16 +67,16 @@ const App = () => {
 
   var gamma = currentOrientation.gamma
   if (gamma < 0) gamma += 180
-  var climbAngle = 90 - gamma
+  var descentAngle = 90 - gamma
 
   var camberAngle = -currentOrientation.beta
 
-  if (window.orientation > 0) {
-    // climbAngle = climbAngle * -1
-    // camberAngle = camberAngle * -1
+  if (window.orientation === 90) {
+    descentAngle = descentAngle * -1
+    camberAngle = camberAngle * -1
   }
   const classes = useStyles({
-    climbAngle,
+    descentAngle,
     camberAngle,
     ...currentOrientation,
   })
@@ -86,13 +86,14 @@ const App = () => {
       <div className={classes.infoContainer}>
         {JSON.stringify(currentOrientation)}
         {JSON.stringify({
-          climbAngle,
+          climbAngle: descentAngle,
           camberAngle,
           orientation: window.orientation,
         })}
       </div>
       <div className={classes.rearView} />
-      <JeepProfile classes={{ root: classes.sideView }} />
+      <JeepProfile view="side" classes={{ root: classes.sideView }} />
+      <JeepProfile view="rear" classes={{ root: classes.sideView }} />
       {/* <Button onClick={resetBaseOrientation}>Reset Orientation</Button> */}
     </div>
   )
