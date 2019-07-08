@@ -102,16 +102,19 @@ const App = () => {
   })
 
   const handleDeviceMotion = e => {
-    console.log(e)
-    var orientation = {}
-    const readProps = ['alpha', 'beta', 'gamma']
-    var changed = false
-    readProps.forEach(readProp => {
-      orientation[readProp] = Math.floor(e[readProp])
-      if (orientation[readProp] !== currentOrientation[readProp]) changed = true
-    })
-    if (changed) {
-      setCurrentOrientation(orientation)
+    const eventProps = ['alpha', 'beta', 'gamma']
+    if (
+      !!eventProps.find(
+        eventProp =>
+          Math.abs(e[eventProp] - currentOrientation[eventProp]) > 0.5
+      )
+    ) {
+      const { alpha, beta, gamma } = e
+      setCurrentOrientation({
+        alpha,
+        beta,
+        gamma,
+      })
     }
   }
   useEffect(() => {
