@@ -72,8 +72,8 @@ const App = () => {
   var camberAngle = -currentOrientation.beta
 
   if (window.orientation > 0) {
-    climbAngle = climbAngle * -1
-    camberAngle = camberAngle * -1
+    // climbAngle = climbAngle * -1
+    // camberAngle = camberAngle * -1
   }
   const classes = useStyles({
     climbAngle,
