@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/styles'
 import JeepProfile from './JeepProfile'
 import useWakelock from './hooks/useWakelock'
+import { Typography } from '@material-ui/core'
 
 const inches = 1
 const useStyles = makeStyles(theme => ({
@@ -24,12 +25,18 @@ const useStyles = makeStyles(theme => ({
     transform: 'translateX(-50%)',
   },
   rearView: {
-    margin: 20,
+    margin: 60,
     transform: props => `rotate(${props.camberAngle}deg)`,
   },
   sideView: {
-    margin: 20,
+    margin: 60,
     transform: props => `rotate(${props.descentAngle}deg)`,
+  },
+  infoSquare: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }))
 
@@ -82,18 +89,19 @@ const App = () => {
     ...currentOrientation,
   })
 
+  const ascentAngle = -descentAngle
+  const leanAngle = Math.abs(camberAngle)
+
   return (
     <div className={classes.root}>
-      <div className={classes.infoContainer}>
-        {JSON.stringify(currentOrientation)}
-        {JSON.stringify({
-          descentAngle,
-          camberAngle,
-          orientation: window.orientation,
-        })}
+      <div className={classes.infoSquare}>
+        <JeepProfile view="rear" classes={{ root: classes.rearView }} />
+        <Typography variant="h5">{`${leanAngle}°`}</Typography>
       </div>
-      <JeepProfile view="rear" classes={{ root: classes.rearView }} />
-      <JeepProfile view="side" classes={{ root: classes.sideView }} />
+      <div className={classes.infoSquare}>
+        <JeepProfile view="side" classes={{ root: classes.sideView }} />
+        <Typography variant="h5">{`${ascentAngle}°`}</Typography>
+      </div>
       {/* <Button onClick={resetBaseOrientation}>Reset Orientation</Button> */}
     </div>
   )
