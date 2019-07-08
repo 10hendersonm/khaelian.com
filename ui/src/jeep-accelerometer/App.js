@@ -87,8 +87,8 @@ const App = () => {
           orientation: window.orientation,
         })}
       </div>
-      <JeepProfile view="side" classes={{ root: classes.rearView }} />
-      <JeepProfile view="rear" classes={{ root: classes.sideView }} />
+      <JeepProfile view="rear" classes={{ root: classes.rearView }} />
+      <JeepProfile view="side" classes={{ root: classes.sideView }} />
       {/* <Button onClick={resetBaseOrientation}>Reset Orientation</Button> */}
     </div>
   )
