@@ -72,7 +72,7 @@ const App = () => {
     camberAngle = camberAngle * -1
   }
 
-  if (descentAngle < 0) {
+  if (descentAngle <= 0) {
     camberAngle = camberAngle * -1 - 180
   }
 
