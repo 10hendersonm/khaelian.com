@@ -71,6 +71,11 @@ const App = () => {
     descentAngle = descentAngle * -1
     camberAngle = camberAngle * -1
   }
+
+  if (descentAngle < 0) {
+    camberAngle = camberAngle * -1 - 180
+  }
+
   const classes = useStyles({
     descentAngle,
     camberAngle,
