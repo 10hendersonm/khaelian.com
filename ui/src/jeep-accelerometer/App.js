@@ -171,6 +171,7 @@ const App = () => {
         >
           {wakeLock ? 'Disable Wake Lock' : 'Enable Wake Lock'}
         </Button>
+        {JSON.stringify(currentOrientation)}
       </div>
       {window.orientation === 0 ? (
         <Typography variant="h4">Rotate Device</Typography>
