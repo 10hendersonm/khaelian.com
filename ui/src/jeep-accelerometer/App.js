@@ -25,10 +25,6 @@ const useStyles = makeStyles(theme => ({
   },
   rearView: {
     margin: 20,
-    backgroundColor: 'black',
-    display: 'block',
-    height: 72.5 * inches,
-    width: 73.7 * inches,
     transform: props => `rotate(${props.camberAngle}deg)`,
   },
   sideView: {
@@ -86,13 +82,12 @@ const App = () => {
       <div className={classes.infoContainer}>
         {JSON.stringify(currentOrientation)}
         {JSON.stringify({
-          climbAngle: descentAngle,
+          descentAngle,
           camberAngle,
           orientation: window.orientation,
         })}
       </div>
-      <div className={classes.rearView} />
-      <JeepProfile view="side" classes={{ root: classes.sideView }} />
+      <JeepProfile view="side" classes={{ root: classes.rearView }} />
       <JeepProfile view="rear" classes={{ root: classes.sideView }} />
       {/* <Button onClick={resetBaseOrientation}>Reset Orientation</Button> */}
     </div>
