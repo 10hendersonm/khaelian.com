@@ -94,15 +94,20 @@ const App = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.infoSquare}>
-        <JeepProfile view="rear" classes={{ root: classes.rearView }} />
-        <Typography variant="h5">{`${leanAngle}°`}</Typography>
-      </div>
-      <div className={classes.infoSquare}>
-        <JeepProfile view="side" classes={{ root: classes.sideView }} />
-        <Typography variant="h5">{`${ascentAngle}°`}</Typography>
-      </div>
-      {/* <Button onClick={resetBaseOrientation}>Reset Orientation</Button> */}
+      {window.orientation === 0 ? (
+        <Typography variant="h4">Fuck off, Ted</Typography>
+      ) : (
+        <>
+          <div className={classes.infoSquare}>
+            <JeepProfile view="rear" classes={{ root: classes.rearView }} />
+            <Typography variant="h5">{`${leanAngle}°`}</Typography>
+          </div>
+          <div className={classes.infoSquare}>
+            <JeepProfile view="side" classes={{ root: classes.sideView }} />
+            <Typography variant="h5">{`${ascentAngle}°`}</Typography>
+          </div>
+        </>
+      )}
     </div>
   )
 }
