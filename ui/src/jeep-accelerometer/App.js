@@ -20,26 +20,16 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const defaultOrientation = {
-  set: false,
-  alpha: 0,
-  beta: 0,
-  gamma: 0,
-}
 const App = () => {
-  const [baseOrientation, setBaseOrientation] = useState(defaultOrientation)
-  const [currentOrientation, setCurrentOrientation] = useState(
-    defaultOrientation
-  )
-
-  const resetBaseOrientation = () => {
-    setBaseOrientation(currentOrientation)
-  }
+  const [currentOrientation, setCurrentOrientation] = useState({
+    alpha: 0,
+    beta: 0,
+    gamma: 0,
+  })
 
   const handleDeviceMotion = e => {
-    var orientation = {
-      set: true,
-    }
+    console.log(window.orientation)
+    var orientation = {}
     const readProps = ['alpha', 'beta', 'gamma']
     var changed = false
     readProps.forEach(readProp => {
@@ -49,18 +39,16 @@ const App = () => {
     if (changed) {
       setCurrentOrientation(orientation)
     }
-    if (baseOrientation === null) setBaseOrientation(orientation)
   }
   useEffect(() => {
-    window.addEventListener('devicemotion', handleDeviceMotion, true)
     window.addEventListener('deviceorientation', handleDeviceMotion, true)
     return () => {
       window.removeEventListener('deviceorientation', handleDeviceMotion, true)
     }
   }, [])
 
-  var climbAngle = 90 - currentOrientation.gamma
-  if (climbAngle > 180) climbAngle -= 180
+  const isClimb = currentOrientation.alpha < 0 && currentOrientation.beta < 0
+  var climbAngle = (90 - currentOrientation.gamma) * (isClimb ? 1 : -1)
 
   const classes = useStyles({
     climbAngle,
@@ -72,7 +60,8 @@ const App = () => {
       {JSON.stringify(currentOrientation)}
       <div className={classes.rearView} />
       <JeepProfile classes={{ root: classes.sideView }} />
-      <Button onClick={resetBaseOrientation}>Reset Orientation</Button>
+      {climbAngle}
+      {/* <Button onClick={resetBaseOrientation}>Reset Orientation</Button> */}
     </div>
   )
 }
