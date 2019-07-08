@@ -28,9 +28,47 @@ const useStyles = makeStyles(theme => ({
     transform: 'translateX(-50%)',
     margin: 20,
   },
-  rearView: {
-    margin: 60,
-    transform: props => `rotate(${props.camberAngle}deg)`,
+  info: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translate(-50%, 100px)',
+  },
+  rear: {
+    position: 'relative',
+  },
+  rearLogo: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  rearBackground: {
+    height: 200,
+    width: 200,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    borderRadius: '100%',
+    transform: props =>
+      `translate(-50%, -50%) rotate(${-props.camberAngle}deg)`,
+    overflow: 'hidden',
+    '& .bar': {
+      borderRight: '2px solid black',
+      top: 0,
+      left: 0,
+      right: '50%',
+      bottom: '50%',
+      position: 'absolute',
+    },
+    '& .horizon': {
+      backgroundColor: 'rgba(0,0,0,.3)',
+      borderTop: '2px solid black',
+      position: 'absolute',
+      top: '50%',
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
   },
   sideView: {
     margin: 60,
@@ -84,18 +122,29 @@ const App = () => {
 
   var gamma = currentOrientation.gamma
   if (gamma < 0) gamma += 180
-  var descentAngle = 90 - gamma
+  var baseDescentAngle = 90 - gamma
 
-  var camberAngle = -currentOrientation.beta
+  var baseCamberAngle = -currentOrientation.beta
 
   if (window.orientation === 90) {
-    descentAngle = descentAngle * -1
-    camberAngle = camberAngle * -1
+    baseDescentAngle = baseDescentAngle * -1
+    baseCamberAngle = baseCamberAngle * -1
   }
 
-  if (descentAngle <= 0) {
-    camberAngle = camberAngle * -1 - 180
+  if (baseDescentAngle <= 0) {
+    baseCamberAngle = baseCamberAngle * -1 - 180
   }
+
+  const [trim, setTrim] = useState({ descentAngle: 0, camberAngle: 0 })
+  const zeroTrim = () => {
+    setTrim({
+      descentAngle: baseDescentAngle,
+      camberAngle: baseCamberAngle,
+    })
+  }
+
+  const descentAngle = baseDescentAngle - trim.descentAngle
+  const camberAngle = baseCamberAngle - trim.camberAngle
 
   const classes = useStyles({
     descentAngle,
@@ -109,6 +158,7 @@ const App = () => {
   return (
     <div className={classes.root}>
       <div className={classes.infoContainer}>
+        <Button onClick={zeroTrim}>Set Level</Button>
         <Button
           onClick={handleEnableWakeLock}
           variant="contained"
@@ -118,12 +168,20 @@ const App = () => {
         </Button>
       </div>
       {window.orientation === 0 ? (
-        <Typography variant="h4">Fuck off, Ted</Typography>
+        <Typography variant="h4">Rotate Device</Typography>
       ) : (
         <>
-          <div className={classes.infoSquare}>
-            <JeepProfile view="rear" classes={{ root: classes.rearView }} />
-            <Typography variant="h5">{`${leanAngle}°`}</Typography>
+          <div className={classes.rear}>
+            {/* <JeepProfile view="rear" classes={{ root: classes.rearView }} /> */}
+            <div className={classes.rearBackground}>
+              <div className={'horizon'} />
+              <div className={'bar'} />
+            </div>
+            <JeepProfile view="rear" classes={{ root: classes.rearLogo }} />
+            <Typography
+              className={classes.info}
+              variant="h5"
+            >{`${leanAngle}°`}</Typography>
           </div>
           <div className={classes.infoSquare}>
             <JeepProfile view="side" classes={{ root: classes.sideView }} />

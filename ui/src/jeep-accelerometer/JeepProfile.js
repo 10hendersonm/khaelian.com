@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   },
   rearRollCage: {
     position: 'absolute',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     border: '5px solid black',
     top: 0,
     height: 20 * inches,
