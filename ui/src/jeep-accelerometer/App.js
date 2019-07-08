@@ -80,8 +80,11 @@ const App = () => {
     <div className={classes.root}>
       <div className={classes.infoContainer}>
         {JSON.stringify(currentOrientation)}
-        {climbAngle}
-        {camberAngle}
+        {JSON.stringify({
+          climbAngle,
+          camberAngle,
+          orientation: window.orientation,
+        })}
       </div>
       <div className={classes.rearView} />
       <JeepProfile classes={{ root: classes.sideView }} />
