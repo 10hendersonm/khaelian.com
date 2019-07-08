@@ -47,8 +47,8 @@ const App = () => {
     }
   }, [])
 
-  const isClimb = currentOrientation.alpha < 0 && currentOrientation.beta < 0
-  var climbAngle = (90 - currentOrientation.gamma) * (isClimb ? 1 : -1)
+  // const isClimb = currentOrientation.alpha < 0 && currentOrientation.beta < 0
+  var climbAngle = 90 - currentOrientation.gamma
 
   const classes = useStyles({
     climbAngle,
