@@ -288,13 +288,13 @@ const App = () => {
         >
           {wakeLock ? 'Disable Wake Lock' : 'Enable Wake Lock'}
         </Button>
-        <Button
+        {/* <Button
           onClick={handleToggleFullscreen}
           variant="contained"
           color={fullscreen ? null : 'primary'}
         >
           {fullscreen ? 'Disable Full Screen' : 'Enable Full Screen'}
-        </Button>
+        </Button> */}
       </div>
       {window.orientation === 0 ? (
         <Typography variant="h4">Rotate Device</Typography>
