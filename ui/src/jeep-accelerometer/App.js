@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/styles'
 import JeepProfile from './JeepProfile'
-import useWakelock from './hooks/useWakelock'
 import { Typography } from '@material-ui/core'
 import NoSleep from 'nosleep.js'
+import useEventListener from './hooks/useEventListener'
+import classNames from 'classnames'
 
 const noSleep = new NoSleep()
 
@@ -29,9 +30,23 @@ const useStyles = makeStyles(theme => ({
     margin: 20,
   },
   info: {
+    whiteSpace: 'nowrap',
     position: 'absolute',
     left: '50%',
     transform: 'translate(-50%, 100px)',
+  },
+  secondaryInfo: {
+    color: 'red',
+    whiteSpace: 'nowrap',
+    position: 'absolute',
+    left: '50%',
+    transform: 'translate(-50%, -100%) translateY(-100px)',
+    '&.left': {
+      transform: 'translate(-50%, -50%) translateY(-85px) translateX(-85px)',
+    },
+    '&.right': {
+      transform: 'translate(-50%, -50%) translateY(-85px) translateX(85px)',
+    },
   },
   rear: {
     position: 'relative',
@@ -49,8 +64,8 @@ const useStyles = makeStyles(theme => ({
     top: '50%',
     left: '50%',
     borderRadius: '100%',
-    transform: props =>
-      `translate(-50%, -50%) rotate(${-props.camberAngle}deg)`,
+    transition: 'transform .5s',
+    transform: props => `translate(-50%, -50%) rotate(${props.camberAngle}deg)`,
     overflow: 'hidden',
     '& .bar': {
       borderRight: '2px solid black',
@@ -70,15 +85,108 @@ const useStyles = makeStyles(theme => ({
       bottom: 0,
     },
   },
-  sideView: {
-    margin: 60,
-    transform: props => `rotate(${props.descentAngle}deg)`,
+  rearMax: {
+    height: 200,
+    width: 200,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    borderRadius: '100%',
+    transition: 'transform .5s',
+    transform: props =>
+      `translate(-50%, -50%) rotate(${props.maxCamberAngle + 1}deg)`,
+    '&.left': {
+      transform: props =>
+        `translate(-50%, -50%) rotate(${-(props.maxCamberAngle + 1)}deg)`,
+    },
+    overflow: 'hidden',
+    '& .bar': {
+      borderRight: '2px solid red',
+      top: 0,
+      left: 0,
+      right: '50%',
+      bottom: '50%',
+      position: 'absolute',
+    },
   },
-  infoSquare: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+  sideBackground: {
+    height: 200,
+    width: 200,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '100%',
+    overflow: 'hidden',
+    '& .bar': {
+      borderRight: '2px solid black',
+      top: 0,
+      left: 0,
+      right: '50%',
+      bottom: '50%',
+      position: 'absolute',
+    },
+    '& .horizon': {
+      backgroundColor: 'rgba(0,0,0,.3)',
+      borderTop: '2px solid black',
+      position: 'absolute',
+      top: '50%',
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+  },
+  sideStatus: {
+    height: 200,
+    width: 200,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transition: 'transform .5s',
+    transform: props => `translate(-50%, -50%) rotate(${-props.climbAngle}deg)`,
+    borderRadius: '100%',
+    overflow: 'hidden',
+    '& .bar': {
+      borderBottom: '2px solid black',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: '50%',
+      position: 'absolute',
+    },
+  },
+  sideLogo: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transition: 'transform .5s',
+    transform: props => `translate(-50%, -50%) rotate(${-props.climbAngle}deg)`,
+  },
+  sideMax: {
+    height: 200,
+    width: 200,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    borderRadius: '100%',
+    transition: 'transform .5s',
+    '&.max': {
+      transform: props =>
+        `translate(-50%, -50%) rotate(${89 - props.maxClimbAngle}deg)`,
+    },
+    '&.min': {
+      transform: props =>
+        `translate(-50%, -50%) rotate(${272 - props.minClimbAngle}deg)`,
+    },
+    overflow: 'hidden',
+    '& .bar': {
+      borderRight: '2px solid red',
+      top: 0,
+      left: 0,
+      right: '50%',
+      bottom: '50%',
+      position: 'absolute',
+    },
   },
 }))
 
@@ -94,71 +202,75 @@ const App = () => {
       setWakeLock(true)
     }
   }
+  const [trim, setTrim] = useState({ climbAngle: 0, camberAngle: 0 })
 
-  const [currentOrientation, setCurrentOrientation] = useState({
-    alpha: 0,
-    beta: 0,
-    gamma: 0,
-  })
+  const [climbAngle, setClimbAngle] = useState(0)
+  const [camberAngle, setCamberAngle] = useState(0)
+  const [maxClimbAngle, setMaxClimbAngle] = useState(0)
+  const [minClimbAngle, setMinClimbAngle] = useState(0)
+  const [maxCamberAngle, setMaxCamberAngle] = useState(0)
+  // const [lastCheck, setLastCheck] = useState(new Date())
 
-  const handleDeviceMotion = e => {
-    const eventProps = ['alpha', 'beta', 'gamma']
-    if (
-      !!eventProps.find(
-        eventProp =>
-          Math.abs(e[eventProp] - currentOrientation[eventProp]) > 0.5
-      )
-    ) {
-      const { alpha, beta, gamma } = e
-      setCurrentOrientation({
-        alpha,
-        beta,
-        gamma,
-      })
+  const handleDeviceMotion = ({ alpha, beta, gamma }) => {
+    if (alpha === 0 && beta === 0 && gamma === 0) return
+    // const now = new Date()
+    // if (now - lastCheck < 2500) return
+    // setLastCheck(now)
+    var baseClimbAngle = (90 - Math.abs(gamma)) * (gamma > 0 ? -1 : 1)
+    const isFlipped = window.orientation === 90
+    if (isFlipped) {
+      baseClimbAngle = -baseClimbAngle
     }
-  }
-  useEffect(() => {
-    const event = 'deviceorientationabsolute'
-    window.addEventListener(event, handleDeviceMotion, true)
-    return () => {
-      window.removeEventListener(event, handleDeviceMotion, true)
+
+    var baseCamberAngle =
+      baseClimbAngle < 0 ? beta : (180 - Math.abs(beta)) * (beta > 0 ? 1 : -1)
+
+    if (isFlipped) {
+      baseCamberAngle = -baseCamberAngle
     }
-  }, [])
 
-  var gamma = currentOrientation.gamma
-  if (gamma < 0) gamma += 180
-  var baseDescentAngle = 90 - gamma
+    baseClimbAngle = Math.round(baseClimbAngle)
+    baseCamberAngle = Math.round(baseCamberAngle)
+    setClimbAngle(baseClimbAngle)
+    setCamberAngle(baseCamberAngle)
 
-  var baseCamberAngle = -currentOrientation.beta
+    const trimmedClimbAngle = climbAngle - trim.climbAngle
+    const trimmedCamberAngle = baseCamberAngle - trim.camberAngle
 
-  if (window.orientation === 90) {
-    baseDescentAngle = baseDescentAngle * -1
-    baseCamberAngle = baseCamberAngle * -1
+    const absCamberAngle = Math.abs(trimmedCamberAngle)
+    if (absCamberAngle > maxCamberAngle) {
+      setMaxCamberAngle(absCamberAngle)
+    }
+
+    if (trimmedClimbAngle > maxClimbAngle) setMaxClimbAngle(trimmedClimbAngle)
+
+    if (trimmedClimbAngle < minClimbAngle) setMinClimbAngle(trimmedClimbAngle)
   }
 
-  if (baseDescentAngle <= 0) {
-    baseCamberAngle = baseCamberAngle * -1 - 180
-  }
+  useEventListener('deviceorientationabsolute', handleDeviceMotion)
 
-  const [trim, setTrim] = useState({ descentAngle: 0, camberAngle: 0 })
   const zeroTrim = () => {
     setTrim({
-      descentAngle: baseDescentAngle,
-      camberAngle: baseCamberAngle,
+      climbAngle,
+      camberAngle,
     })
+    setMaxClimbAngle(0)
+    setMinClimbAngle(0)
+    setMaxCamberAngle(0)
   }
 
-  const descentAngle = baseDescentAngle - trim.descentAngle
-  const camberAngle = baseCamberAngle - trim.camberAngle
+  const trimmedClimbAngle = climbAngle - trim.climbAngle
+  const trimmedCamberAngle = camberAngle - trim.camberAngle
 
   const classes = useStyles({
-    descentAngle,
-    camberAngle,
-    ...currentOrientation,
+    climbAngle: trimmedClimbAngle,
+    camberAngle: trimmedCamberAngle,
+    maxCamberAngle,
+    minClimbAngle,
+    maxClimbAngle,
   })
 
-  const ascentAngle = -descentAngle
-  const leanAngle = Math.abs(camberAngle)
+  const leanAngle = Math.abs(trimmedCamberAngle)
 
   return (
     <div className={classes.root}>
@@ -171,14 +283,18 @@ const App = () => {
         >
           {wakeLock ? 'Disable Wake Lock' : 'Enable Wake Lock'}
         </Button>
-        {JSON.stringify(currentOrientation)}
       </div>
       {window.orientation === 0 ? (
         <Typography variant="h4">Rotate Device</Typography>
       ) : (
         <>
           <div className={classes.rear}>
-            {/* <JeepProfile view="rear" classes={{ root: classes.rearView }} /> */}
+            <div className={classes.rearMax}>
+              <div className={'bar'} />
+            </div>
+            <div className={classNames(classes.rearMax, 'left')}>
+              <div className={'bar'} />
+            </div>
             <div className={classes.rearBackground}>
               <div className={'horizon'} />
               <div className={'bar'} />
@@ -188,10 +304,39 @@ const App = () => {
               className={classes.info}
               variant="h5"
             >{`${leanAngle}°`}</Typography>
+            <Typography
+              className={classes.secondaryInfo}
+              variant="h5"
+            >{`${maxCamberAngle}°`}</Typography>
           </div>
-          <div className={classes.infoSquare}>
-            <JeepProfile view="side" classes={{ root: classes.sideView }} />
-            <Typography variant="h5">{`${ascentAngle}°`}</Typography>
+          <div className={classes.rear}>
+            <div className={classNames(classes.sideMax, 'min')}>
+              <div className={'bar'} />
+            </div>
+            <div className={classNames(classes.sideMax, 'max')}>
+              <div className={'bar'} />
+            </div>
+            <div className={classes.sideBackground}>
+              <div className={'horizon'} />
+              <div className={'bar'} />
+            </div>
+            <div className={classes.sideStatus}>
+              <div className={'horizon'} />
+              <div className={'bar'} />
+            </div>
+            <JeepProfile view="side" classes={{ root: classes.sideLogo }} />
+            <Typography
+              className={classes.info}
+              variant="h5"
+            >{`${trimmedClimbAngle}°`}</Typography>
+            <Typography
+              className={classNames(classes.secondaryInfo, 'left')}
+              variant="h5"
+            >{`${minClimbAngle}°`}</Typography>
+            <Typography
+              className={classNames(classes.secondaryInfo, 'right')}
+              variant="h5"
+            >{`${maxClimbAngle}°`}</Typography>
           </div>
         </>
       )}

@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
   sideRollCage: {
     position: 'absolute',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     border: '5px solid black',
     left: 15 * inches,
     top: 0,
