@@ -192,6 +192,15 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
   const [wakeLock, setWakeLock] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
+
+  const handleToggleFullscreen = e => {
+    if (fullscreen) {
+      document.exitFullscreen()
+    } else {
+      document.body.requestFullscreen()
+    }
+  }
 
   const handleEnableWakeLock = e => {
     if (wakeLock) {
@@ -209,13 +218,9 @@ const App = () => {
   const [maxClimbAngle, setMaxClimbAngle] = useState(0)
   const [minClimbAngle, setMinClimbAngle] = useState(0)
   const [maxCamberAngle, setMaxCamberAngle] = useState(0)
-  // const [lastCheck, setLastCheck] = useState(new Date())
 
   const handleDeviceMotion = ({ alpha, beta, gamma }) => {
     if (alpha === 0 && beta === 0 && gamma === 0) return
-    // const now = new Date()
-    // if (now - lastCheck < 2500) return
-    // setLastCheck(now)
     var baseClimbAngle = (90 - Math.abs(gamma)) * (gamma > 0 ? -1 : 1)
     const isFlipped = window.orientation === 90
     if (isFlipped) {
@@ -282,6 +287,13 @@ const App = () => {
           color={wakeLock ? null : 'primary'}
         >
           {wakeLock ? 'Disable Wake Lock' : 'Enable Wake Lock'}
+        </Button>
+        <Button
+          onClick={handleToggleFullscreen}
+          variant="contained"
+          color={fullscreen ? null : 'primary'}
+        >
+          {fullscreen ? 'Disable Full Screen' : 'Enable Full Screen'}
         </Button>
       </div>
       {window.orientation === 0 ? (
