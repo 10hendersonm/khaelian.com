@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
     top: '50%',
     left: '50%',
     borderRadius: '100%',
-    // transition: 'transform .5s',
+    transition: 'transform .1s',
     transform: props => `translate(-50%, -50%) rotate(${props.camberAngle}deg)`,
     overflow: 'hidden',
     '& .bar': {
@@ -92,7 +92,7 @@ const useStyles = makeStyles(theme => ({
     top: '50%',
     left: '50%',
     borderRadius: '100%',
-    // transition: 'transform .5s',
+    transition: 'transform .1s',
     transform: props =>
       `translate(-50%, -50%) rotate(${props.maxCamberAngle + 1}deg)`,
     '&.left': {
@@ -142,7 +142,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    // transition: 'transform .5s',
+    transition: 'transform .1s',
     transform: props => `translate(-50%, -50%) rotate(${-props.climbAngle}deg)`,
     borderRadius: '100%',
     overflow: 'hidden',
@@ -159,7 +159,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    // transition: 'transform .5s',
+    transition: 'transform .1s',
     transform: props => `translate(-50%, -50%) rotate(${-props.climbAngle}deg)`,
   },
   sideMax: {
@@ -169,7 +169,7 @@ const useStyles = makeStyles(theme => ({
     top: '50%',
     left: '50%',
     borderRadius: '100%',
-    // transition: 'transform .5s',
+    transition: 'transform .1s',
     '&.max': {
       transform: props =>
         `translate(-50%, -50%) rotate(${89 - props.maxClimbAngle}deg)`,
