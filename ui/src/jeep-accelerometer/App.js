@@ -219,8 +219,10 @@ const App = () => {
   const [minClimbAngle, setMinClimbAngle] = useState(0)
   const [maxCamberAngle, setMaxCamberAngle] = useState(0)
 
-  const handleDeviceMotion = ({ alpha, beta, gamma }) => {
+  const handleDeviceMotion = e => {
+    const { alpha, beta, gamma, absolute } = e
     if (alpha === 0 && beta === 0 && gamma === 0) return
+    console.log(e)
     var baseClimbAngle = (90 - Math.abs(gamma)) * (gamma > 0 ? -1 : 1)
     const isFlipped = window.orientation === 90
     if (isFlipped) {
@@ -301,12 +303,12 @@ const App = () => {
       ) : (
         <>
           <div className={classes.rear}>
-            <div className={classes.rearMax}>
+            {/* <div className={classes.rearMax}>
               <div className={'bar'} />
             </div>
             <div className={classNames(classes.rearMax, 'left')}>
               <div className={'bar'} />
-            </div>
+            </div> */}
             <div className={classes.rearBackground}>
               <div className={'horizon'} />
               <div className={'bar'} />
@@ -316,18 +318,18 @@ const App = () => {
               className={classes.info}
               variant="h5"
             >{`${leanAngle}°`}</Typography>
-            <Typography
+            {/* <Typography
               className={classes.secondaryInfo}
               variant="h5"
-            >{`${maxCamberAngle}°`}</Typography>
+            >{`${maxCamberAngle}°`}</Typography> */}
           </div>
           <div className={classes.rear}>
-            <div className={classNames(classes.sideMax, 'min')}>
+            {/* <div className={classNames(classes.sideMax, 'min')}>
               <div className={'bar'} />
             </div>
             <div className={classNames(classes.sideMax, 'max')}>
               <div className={'bar'} />
-            </div>
+            </div> */}
             <div className={classes.sideBackground}>
               <div className={'horizon'} />
               <div className={'bar'} />
@@ -341,14 +343,14 @@ const App = () => {
               className={classes.info}
               variant="h5"
             >{`${trimmedClimbAngle}°`}</Typography>
-            <Typography
+            {/* <Typography
               className={classNames(classes.secondaryInfo, 'left')}
               variant="h5"
-            >{`${minClimbAngle}°`}</Typography>
-            <Typography
+            >{`${minClimbAngle}°`}</Typography> */}
+            {/* <Typography
               className={classNames(classes.secondaryInfo, 'right')}
               variant="h5"
-            >{`${maxClimbAngle}°`}</Typography>
+            >{`${maxClimbAngle}°`}</Typography> */}
           </div>
         </>
       )}
