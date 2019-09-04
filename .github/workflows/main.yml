@@ -5,8 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: node:lts-alpine
     steps:
+    - uses: actions/setup-node
     - name: install
       run: npm run install-dependencies
     - name: build
