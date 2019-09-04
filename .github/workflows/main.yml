@@ -1,0 +1,13 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: docker://node:lts-alpine
+    - name: install
+      run: npm ci
+    - name: lint
+      run: npm run lint
