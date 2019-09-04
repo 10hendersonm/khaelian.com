@@ -8,6 +8,6 @@ jobs:
     steps:
     - uses: docker://node:lts-alpine
     - name: install
-      run: npm ci
-    - name: lint
-      run: npm run lint
+      run: npm run install-dependencies
+    - name: build
+      run: npm run build
