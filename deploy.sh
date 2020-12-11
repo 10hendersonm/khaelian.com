@@ -20,15 +20,16 @@ scp -r $(pwd) webserver:$DEPLOY_DIR
 
 # copy in secrets from outside?
 
-# echo "Stopping / Removing Docker Containers"
-# ssh webserver "
-# docker stop $(docker ps -aq)
-# docker rm $(docker ps -aq)
-# '
+echo "Stopping / Removing Docker Containers"
+ssh webserver '
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+'
 
 echo "Dockerizing"
 ssh webserver "
 cd $DEPLOY_PATH
+echo 'APP_ENV=dev' >> .env
 docker build -t webserver:latest .
 docker run -d -p 80:8080 webserver
 "

@@ -15,6 +15,7 @@ import request from 'request'
 // misc
 import chalk from 'chalk'
 import dotenv from 'dotenv'
+import fs from 'fs'
 
 dotenv.config()
 
@@ -37,7 +38,8 @@ app.use('/sms', smsController)
 
 const dev = process.env.APP_ENV === 'dev'
 
-if (dev) {
+const hasFrontEndFiles = fs.existsSync('ui')
+if (!hasFrontEndFiles) {
   app.all('*', (req, res) => {
     const url = `http://localhost:3000${req.url}`
     req.pipe(request(url)).pipe(res)
