@@ -3,8 +3,9 @@ mkdir -p ~/.ssh
 chmod 700 ~/.ssh
 echo $DEPLOY_SSH_PRIVATE_KEY >> ~/.ssh/id_rsa
 
-echo "Configuring ssh agent"
+echo "Starting ssh agent"
 ssh-agent -s
+echo "Configuring ssh agent"
 ssh-add ~/.ssh/id_rsa
 
 echo "Attempting ssh connection"
