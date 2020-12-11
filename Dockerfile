@@ -1,8 +1,7 @@
 FROM node:14.15.1-alpine
 
 COPY . .
-RUN npm install
-RUN npx lerna bootstrap --hoist
+RUN npm install && npx lerna exec -- npm i
 RUN npm run build
 RUN npm run clean
 

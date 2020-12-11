@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/styles'
@@ -6,11 +6,10 @@ import JeepProfile from './JeepProfile'
 import { Typography } from '@material-ui/core'
 import NoSleep from 'nosleep.js'
 import useEventListener from './hooks/useEventListener'
-import classNames from 'classnames'
 
 const noSleep = new NoSleep()
 
-const inches = 1
+// const inches = 1
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
@@ -192,15 +191,15 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
   const [wakeLock, setWakeLock] = useState(false)
-  const [fullscreen, setFullscreen] = useState(false)
+  // const [fullscreen, setFullscreen] = useState(false)
 
-  const handleToggleFullscreen = e => {
-    if (fullscreen) {
-      document.exitFullscreen()
-    } else {
-      document.body.requestFullscreen()
-    }
-  }
+  // const handleToggleFullscreen = e => {
+  //   if (fullscreen) {
+  //     document.exitFullscreen()
+  //   } else {
+  //     document.body.requestFullscreen()
+  //   }
+  // }
 
   const handleEnableWakeLock = e => {
     if (wakeLock) {
@@ -220,7 +219,7 @@ const App = () => {
   const [maxCamberAngle, setMaxCamberAngle] = useState(0)
 
   const handleDeviceMotion = e => {
-    const { alpha, beta, gamma, absolute } = e
+    const { alpha, beta, gamma, /*absolute*/ } = e
     if (alpha === 0 && beta === 0 && gamma === 0) return
     console.log(e)
     var baseClimbAngle = (90 - Math.abs(gamma)) * (gamma > 0 ? -1 : 1)
