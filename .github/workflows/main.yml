@@ -15,7 +15,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Install Production Dependencies
-        run: npm run clean && npm i && npx lerna exec -- npm i --production
+        run: npm run clean && cd packages/api && npm i --production
       - name: Deploy
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
