@@ -10,5 +10,10 @@ HOST webserver
     StrictHostKeyChecking no
 END
 
+DEPLOY_PATH=/home/$DEPLOY_USER/$DEPLOY_HOST
+
 echo "Copying files"
-scp -r $(pwd) webserver:/home/$DEPLOY_USER/$DEPLOY_HOST
+scp -r $(pwd) webserver:$DEPLOY_PATH
+
+echo "Dockerizing"
+ssh webserver "cd $DEPLOY_PATH && docker build -t webserver:latest ."
