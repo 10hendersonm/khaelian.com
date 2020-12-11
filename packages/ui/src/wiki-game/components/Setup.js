@@ -29,11 +29,15 @@ const useStyles = makeStyles(theme => ({
 
 const Setup = ({ websocket, playerName: currentPlayerName }) => {
   const [gameStatus, setGameStatus] = useState(null)
+  const [article, setArticle] = useState(null)
   useWebSocket({
     connection: websocket,
     onMessage: data => {
       if (data.status) {
         setGameStatus(data.status)
+      }
+      if (data.article !== undefined) {
+        setArticle(data.article)
       }
     },
   })
@@ -97,6 +101,12 @@ const Setup = ({ websocket, playerName: currentPlayerName }) => {
       <PlayerStatus showIcon demo />
       <Divider />
       {playerStatuses}
+      {!currentPlayerIsJudge && !!article && (
+        <>
+          <Typography variant="caption">Article</Typography>
+          <Typography variant="h5">{article}</Typography>
+        </>
+      )}
       {currentPlayerIsJudge && (
         <OptionalLink
           disabled={gameStartDisabled}

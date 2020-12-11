@@ -15,6 +15,10 @@ export default (wss) => {
     wss.broadcast(getStatus())
   }
 
+  const setArticle = (articleName) => {
+    wss.broadcast({article: articleName})
+  }
+
   const getStatus = () => {
     var broadcastPlayers = {}
     Object.entries(players).forEach(([name, value]) => {
@@ -35,6 +39,7 @@ export default (wss) => {
   app.get('/reset', (req, res) => {
     players = {}
     broadcastStatus()
+    res.sendStatus(200)
   })
 
   app.post('/join', (req, res) => {
@@ -90,6 +95,7 @@ export default (wss) => {
     const playerArr = Object.values(players).filter(({ judge }) => !judge)
     const randomPlayer = randomItem(playerArr)
     const { title, link } = randomPlayer.article
+    setArticle(title)
 
     res.json({
       title,
@@ -124,6 +130,7 @@ export default (wss) => {
       }
     })
     broadcastStatus()
+    setArticle(null)
   })
 
   app.get('/image', async (req, res) => {
