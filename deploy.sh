@@ -10,4 +10,5 @@ HOST webserver
     StrictHostKeyChecking no
 END
 
-ssh webserver 'echo foo >> ~/test'
+echo "Copying files"
+scp -r $(pwd) webserver:/home/$DEPLOY_USER/$DEPLOY_HOST
