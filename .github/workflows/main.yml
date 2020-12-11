@@ -6,11 +6,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Pull Repo
-      uses: actions/checkout@v1
-    - name: Set Up Node
-      uses: actions/setup-node@v1
-    - name: Install Dependencies
-      run: npm i && npx lerna exec -- npm i
-    - name: Build
-      run: npm run build
+      - name: Pull Repo
+        uses: actions/checkout@v1
+      - name: Set Up Node
+        uses: actions/setup-node@v1
+      - name: Install Dependencies
+        run: npm i && npx lerna exec -- npm i
+      - name: Build
+        run: npm run build
+      - name: Deploy
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: ./deploy.sh
