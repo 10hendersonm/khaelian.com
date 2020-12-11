@@ -6,12 +6,13 @@ import { randomItem } from '../utils/array'
 
 import * as giphyService from '../services/giphyService'
 
-export default wss => {
+export default (wss) => {
   var players = {}
 
   const app = Router()
 
   const broadcastStatus = () => {
+    console.log('broadcasting status')
     wss.broadcast(getStatus())
   }
 
@@ -58,12 +59,14 @@ export default wss => {
 
   app.post('/article', (req, res) => {
     const { link, title, playerName } = req.body
+    console.log('/article')
     if (!link || !title) {
       res.sendStatus(400)
       return
     }
     const article = new Article(req.body)
     players[playerName].article = article
+    console.log('broadcasting status')
     broadcastStatus()
     res.sendStatus(201)
   })

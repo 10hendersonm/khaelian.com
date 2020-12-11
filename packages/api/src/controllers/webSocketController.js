@@ -1,10 +1,10 @@
 import WebSocket from 'ws'
 
 const createServer = (server, path) => {
-  const wss = new WebSocket.Server({ server, path })
+  const wss = new WebSocket.Server({ server, path, clientTracking: true })
 
-  wss.broadcast = data => {
-    wss.clients.forEach(client => {
+  wss.broadcast = (data) => {
+    wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         sendMessage(client)(data)
       }
@@ -14,7 +14,7 @@ const createServer = (server, path) => {
   return wss
 }
 
-const sendMessage = client => data => {
+const sendMessage = (client) => (data) => {
   if (typeof data === 'object') data = JSON.stringify(data)
   client.send(data)
 }

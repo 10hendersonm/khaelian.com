@@ -1,53 +1,19 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "api/build/app.js",
+  "name": "khaelian.com",
+  "version": "0.0.0",
   "scripts": {
-    "start": "node .",
-    "start:ui": "npm start --prefix ui/",
-    "debug:comment": "can't use babel-node because it has a bug when running through a symlink...",
-    "debug": "nodemon --ignore \"build/\" --exec \"npm run build:api && npm run start\"",
-    "build": "npm run build:ui && npm run build:api",
-    "build:api": "babel api/src -d api/build",
-    "build:ui": "npm run build --prefix ui/",
-    "install-dependencies": "npm run install-dependencies:ui && npm ci",
-    "install-dependencies:ui": "npm ci --prefix ui/",
-    "serve": "npm run install-dependencies && npm run build && npm run start"
+    "start": "npx lerna run start --stream",
+    "build": "npx lerna run build",
+    "install:production": "npx lerna bootstrap -- --prod",
+    "clean": "npm run clean:packages && npm run clean:root",
+    "clean:packages": "npx lerna exec -- rm -rf node_modules build",
+    "clean:root": "rm -rf node_modules"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/node": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "nodemon": "^1.19.1"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "axios": "^0.19.0",
-    "body-parser": "^1.19.0",
-    "chalk": "^2.4.2",
-    "cors": "^2.8.5",
-    "dotenv": "^8.0.0",
-    "express": "^4.17.1",
-    "ws": "^7.0.1"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ]
-    ],
-    "plugins": [
-      "transform-class-properties"
-    ]
+    "lerna": "3.22.1"
   }
 }

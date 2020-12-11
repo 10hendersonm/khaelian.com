@@ -1,10 +1,10 @@
-import express, { Router } from 'express'
+import { Router, static } from 'express'
 import path from 'path'
 
 const app = Router()
 
-const appDir = 'ui/build'
-app.use(express.static(appDir))
+const appDir = 'ui'
+app.use(static(appDir))
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(appDir, 'index.html'))
 })
