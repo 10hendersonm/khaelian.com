@@ -12,7 +12,6 @@ export default (wss) => {
   const app = Router()
 
   const broadcastStatus = () => {
-    console.log('broadcasting status')
     wss.broadcast(getStatus())
   }
 
@@ -31,6 +30,11 @@ export default (wss) => {
 
   app.get('/status', (req, res) => {
     res.json(getStatus())
+  })
+
+  app.get('/reset', (req, res) => {
+    players = {}
+    broadcastStatus()
   })
 
   app.post('/join', (req, res) => {
