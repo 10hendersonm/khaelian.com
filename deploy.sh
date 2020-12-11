@@ -4,7 +4,7 @@ chmod 700 ~/.ssh
 echo $DEPLOY_SSH_PRIVATE_KEY >> ~/.ssh/id_rsa
 
 echo "Starting ssh agent"
-ssh-agent -s
+eval `ssh-agent -s`
 echo "Configuring ssh agent"
 ssh-add ~/.ssh/id_rsa
 
