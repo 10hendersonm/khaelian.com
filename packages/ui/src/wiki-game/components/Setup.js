@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 // material-ui
 import { makeStyles } from '@material-ui/styles'
+import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
