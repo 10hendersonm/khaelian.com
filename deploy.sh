@@ -1,12 +1,12 @@
 echo "Creating ssh files"
 mkdir -p ~/.ssh/
-echo $DEPLOY_SSH_PRIVATE_KEY > ~/.ssh/id_rsa
-chmod 600 ~/.ssh/id_rsa
+echo $DEPLOY_SSH_PRIVATE_KEY > ~/.ssh/webserver.key
+chmod 600 ~/.ssh/webserver.key
 cat >>~/.ssh/config <<END
 HOST webserver
     HostName $DEPLOY_HOST
     User $DEPLOY_USER
-    IdentityFile ~/.ssh/id_rsa
+    IdentityFile ~/.ssh/webserver.key
     StrictHostKeyChecking no
 END
 
