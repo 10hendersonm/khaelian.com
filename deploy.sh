@@ -1,6 +1,6 @@
 echo "Creating ssh files"
 mkdir -p ~/.ssh
-chmod 700 ~/.ssh
+chmod -R 700 ~/.ssh
 echo $DEPLOY_SSH_PRIVATE_KEY >> ~/.ssh/id_rsa
 
 echo "Starting ssh agent"
