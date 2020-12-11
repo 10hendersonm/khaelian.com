@@ -13,8 +13,12 @@ END
 DEPLOY_DIR=/home/$DEPLOY_USER
 DEPLOY_PATH=$DEPLOY_DIR/$DEPLOY_HOST
 
-echo "Copying files"
+echo "Deleting old files"
+ssh webserver "rm -rf $DEPLOY_PATH"
+echo "Copying new files"
 scp -r $(pwd) webserver:$DEPLOY_DIR
+
+# copy in secrets from outside?
 
 # echo "Stopping / Removing Docker Containers"
 # ssh webserver "
